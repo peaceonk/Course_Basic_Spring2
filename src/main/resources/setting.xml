@@ -1,79 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-<!-- 네임스페이스를 쓰려고 넣어줬는데 안되서 뺌 -->
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/util
+http://www.springframework.org/schema/util/spring-util-2.0.xsd
+">
+
+    <!-- 네임스페이스를 쓰려고 넣어줬는데 안되서 뺌  Util은 해결했는데 아마 P는 사이트가 없는걸로 봐서 사라진 기능이 아닐까 싶음-->
     <!--    xmlns:p="http://www.springframework.org/schema/p"-->
-<!--    xmlns:util="http://www.springframework.org/schema/util"-->
 
 
     <!--    헷갈리지 않도록 반드시 패키지 명도 같이 써줘야함-->
     <!--    java에서의 Exam exam = new NewlecExam(); 이와 같은 코드와 아래의 의미가 같다 -->
-<!--    <bean id="exam" class="spring.di.entity.NewlecExam" />-->
+    <!--    <bean id="exam" class="spring.di.entity.NewlecExam" />-->
 
     <bean id="exam" class="spring.di.entity.NewlecExam">
-<!--        <property name="kor" value="10" />-->
-<!--        <property name="eng" value="10" />-->
-<!--        &lt;!&ndash;   property 설정의 두가지 방법을 다 표현&ndash;&gt;-->
-<!--        <property name="math">-->
-<!--            <value>10</value>-->
-<!--        </property>-->
-<!--        <property name="com">-->
-<!--            <value>10</value>-->
-<!--        </property>-->
+        <!--        <property name="kor" value="10" />-->
+        <!--        <property name="eng" value="10" />-->
+        <!--        &lt;!&ndash;   property 설정의 두가지 방법을 다 표현&ndash;&gt;-->
+        <!--        <property name="math">-->
+        <!--            <value>10</value>-->
+        <!--        </property>-->
+        <!--        <property name="com">-->
+        <!--            <value>10</value>-->
+        <!--        </property>-->
 
-<!--        <constructor-arg index="0" value="10" />-->
-<!--        <constructor-arg index="1" value="20" />-->
-<!--        <constructor-arg index="2" value="30" />-->
-<!--        <constructor-arg index="3" value="40" />-->
+        <!--        <constructor-arg index="0" value="10" />-->
+        <!--        <constructor-arg index="1" value="20" />-->
+        <!--        <constructor-arg index="2" value="30" />-->
+        <!--        <constructor-arg index="3" value="40" />-->
 
-        <constructor-arg name="kor" value="10" />
-        <constructor-arg name="eng" value="20" />
-        <constructor-arg name="math" value="30" />
-        <constructor-arg name="com" value="40" />
+        <constructor-arg name="kor" value="10"/>
+        <constructor-arg name="eng" value="20"/>
+        <constructor-arg name="math" value="30"/>
+        <constructor-arg name="com" value="40"/>
     </bean>
 
-        <!-- 네임스페이스를 활용하는 방법(namespace 설정을 못해서 포기!) -->
-<!--        <bean id="exam" class="spring.di.entity.NewlecExam" p:kor="50" p:eng="60" p:math="70" p:com="70" />-->
+    <!-- 네임스페이스를 활용하는 방법(namespace 설정을 못해서 포기!) => location을 지정해줘서 uitl은 사용했으나 p는 없어진게 아닐까 추측 -->
+    <!--        <bean id="exam" class="spring.di.entity.NewlecExam" p:kor="50" p:eng="60" p:math="70" p:com="70" />-->
 
     <!--    ExamConsole console = new GridExamConsole();
             console.setExam(exam);          -->
     <!--    <bean id="console" class="spring.di.ui.GridExamConsole">-->
 
     <bean id="console" class="spring.di.ui.InlineExamConsole">
+        <!--       Annotation(Autowired)을 통해 DI 할것이므로 주석 -->
         <property name="exam" ref="exam"/>
     </bean>
 
 
-<!--    bean을 통해 객체를 만들고 안에 list를 넣어줌 -->
-    <bean id="exams" class="java.util.ArrayList">
-        <constructor-arg>
-            <list>
-                <bean class="spring.di.entity.NewlecExam">
-                    <constructor-arg name="kor" value="10" />
-                    <constructor-arg name="eng" value="20" />
-                    <constructor-arg name="math" value="30" />
-                    <constructor-arg name="com" value="40" />
-                </bean>
-                <!-- 각각을 레퍼런스 DI 하기 위해서 -->
-                <ref bean="exam" />
-            </list>
-        </constructor-arg>
-    </bean>
+    <!--    bean을 통해 객체를 만들고 안에 list를 넣어줌 -->
+    <!--    <bean id="exams" class="java.util.ArrayList">-->
+    <!--        <constructor-arg>-->
+    <!--            <list>-->
+    <!--                <bean class="spring.di.entity.NewlecExam">-->
+    <!--                    <constructor-arg name="kor" value="10"/>-->
+    <!--                    <constructor-arg name="eng" value="20"/>-->
+    <!--                    <constructor-arg name="math" value="30"/>-->
+    <!--                    <constructor-arg name="com" value="40"/>-->
+    <!--                </bean>-->
+    <!--                &lt;!&ndash; 각각을 레퍼런스 DI 하기 위해서 &ndash;&gt;-->
+    <!--                <ref bean="exam"/>-->
+    <!--            </list>-->
+    <!--        </constructor-arg>-->
+    <!--    </bean>-->
 
-<!--    위와 같이 할 필요 없이 namespace : util을 활용해서 util자체가 객체를 만들 수 있음 -->
-<!--    <util:list id="exams" list-class="java.util.ArrayList">-->
-<!--        <bean class="spring.di.entity.NewlecExam">-->
-<!--            <constructor-arg name="kor" value="10" />-->
-<!--            <constructor-arg name="eng" value="20" />-->
-<!--            <constructor-arg name="math" value="30" />-->
-<!--            <constructor-arg name="com" value="40" />-->
-<!--        </bean>-->
-<!--        &lt;!&ndash; 각각을 레퍼런스 DI 하기 위해서 &ndash;&gt;-->
-<!--        <ref bean="exam" />-->
-<!--    </util:list>-->
-
-
+    <!--        위와 같이 할 필요 없이 namespace : util을 활용해서 util자체가 객체를 만들 수 있음 -->
+    <util:list id="exams" list-class="java.util.ArrayList">
+        <bean class="spring.di.entity.NewlecExam">
+            <constructor-arg name="kor" value="10"/>
+            <constructor-arg name="eng" value="20"/>
+            <constructor-arg name="math" value="30"/>
+            <constructor-arg name="com" value="40"/>
+        </bean>
+        <!-- 각각을 레퍼런스 DI 하기 위해서 -->
+        <ref bean="exam"/>
+    </util:list>
 
 
 </beans>

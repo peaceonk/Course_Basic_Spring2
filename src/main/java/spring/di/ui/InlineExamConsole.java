@@ -20,6 +20,8 @@ public class InlineExamConsole implements ExamConsole {
         System.out.println("total : = " + exam.total() + "\t    avg : "+ exam.avg());
     }
 
+    // Annotation활용
+    @Autowired
     @Override
     public void setExam(Exam exam) {
         this.exam = exam;
