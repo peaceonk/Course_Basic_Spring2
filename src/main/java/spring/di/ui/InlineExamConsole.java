@@ -20,7 +20,7 @@ public class InlineExamConsole implements ExamConsole {
         System.out.println("total : = " + exam.total() + "\t    avg : "+ exam.avg());
     }
 
-    // Annotation활용
+    // Annotation활용해서 setter를 통해서 DI하게 만들거임!
     @Autowired
     @Override
     public void setExam(Exam exam) {

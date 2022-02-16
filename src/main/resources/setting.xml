@@ -2,15 +2,20 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                             http://www.springframework.org/schema/beans/spring-beans.xsd
 http://www.springframework.org/schema/util
 http://www.springframework.org/schema/util/spring-util-2.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.3.xsd
 ">
 
     <!-- 네임스페이스를 쓰려고 넣어줬는데 안되서 뺌  Util은 해결했는데 아마 P는 사이트가 없는걸로 봐서 사라진 기능이 아닐까 싶음-->
     <!--    xmlns:p="http://www.springframework.org/schema/p"-->
 
+
+    <context:annotation-config />
 
     <!--    헷갈리지 않도록 반드시 패키지 명도 같이 써줘야함-->
     <!--    java에서의 Exam exam = new NewlecExam(); 이와 같은 코드와 아래의 의미가 같다 -->
@@ -47,7 +52,7 @@ http://www.springframework.org/schema/util/spring-util-2.0.xsd
 
     <bean id="console" class="spring.di.ui.InlineExamConsole">
         <!--       Annotation(Autowired)을 통해 DI 할것이므로 주석 -->
-        <property name="exam" ref="exam"/>
+<!--        <property name="exam" ref="exam"/>-->
     </bean>
 
 
@@ -75,9 +80,8 @@ http://www.springframework.org/schema/util/spring-util-2.0.xsd
             <constructor-arg name="math" value="30"/>
             <constructor-arg name="com" value="40"/>
         </bean>
-        <!-- 각각을 레퍼런스 DI 하기 위해서 -->
+        <!-- 각각을 레퍼런스 DI까지 하기 위해서 -->
         <ref bean="exam"/>
     </util:list>
-
 
 </beans>
