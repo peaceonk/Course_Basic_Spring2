@@ -6,11 +6,17 @@ import spring.di.entity.Exam;
 import spring.di.entity.NewlecExam;
 import spring.di.ui.ExamConsole;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Program {
     public static void main(String[] args) {
+
+
+/*      이러한 기능을 분리해서 스프링에게 시킬 수 있음. (지시서 스프링설정이 필요함)
+
         Exam exam = new NewlecExam();
 
-/*      이러한 기능을 분리해서 스프링에게 시킬 수 있음. (지시서/스프링설정이 필요함)
         //DI : 생성자를 이용하는 방법
 //        ExamConsole console = new InlineExamConsole(exam);
 //        ExamConsole console = new GridExamConsole(exam);
@@ -31,5 +37,19 @@ public class Program {
         // 만약 같은 자료형을 쓰는 것이 또 있다면 구분할 수 있는 방법을 추가해줘야함
 
         console.print();
+
+
+        // 생성자 주입방식 에서 값이 잘 출력 되는지 확인하기 위해서 생성
+        Exam exam = context.getBean(Exam.class);
+        System.out.println(exam.toString());
+
+        // 목록 및 콜렉션 DI로 가져와 출력 테스트를 위해서
+//        List<Exam> exams = new ArrayList<>();
+        List<Exam> exams = (List<Exam>) context.getBean("exams");
+        //DI 자체를 리스트 형식으로 했기 때문에 주석처리해줌
+//        exams.add(new NewlecExam(1,1,1,1));
+
+        for(Exam e : exams) System.out.println("e = " + e);
+
     }
 }
