@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--    헷갈리지 않도록 반드시 패키지 명도 같이 써줘야함-->
+    <!--    java에서의 Exam exam = new NewlecExam(); 이와 같은 코드와 아래의 의미가 같다 -->
+    <bean id="exam" class="spring.di.entity.NewlecExam" />
+    <!--    ExamConsole console = new GridExamConsole();
+            console.setExam(exam);          -->
+    <bean id="console" class="spring.di.ui.GridExamConsole">
+        <property name="exam" ref="exam"/>
+    </bean>
+
+</beans>

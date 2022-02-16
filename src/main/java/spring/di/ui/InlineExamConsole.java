@@ -4,7 +4,11 @@ import spring.di.entity.Exam;
 
 public class InlineExamConsole implements ExamConsole {
 
-    private final Exam exam;
+    private Exam exam;
+
+    public InlineExamConsole() {
+
+    }
 
     public InlineExamConsole(Exam exam) {
         this.exam = exam;
@@ -13,5 +17,10 @@ public class InlineExamConsole implements ExamConsole {
     @Override
     public void print(){
         System.out.println("total : = " + exam.total() + "\t    avg : "+ exam.avg());
+    }
+
+    @Override
+    public void setExam(Exam exam) {
+        this.exam = exam;
     }
 }
