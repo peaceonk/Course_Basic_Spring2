@@ -1,7 +1,17 @@
 package spring.di.entity;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+    // JAVA Config 파일에서 이 객체를 @bean으로 컨테이너에 담기때문에 어노테이션 주석
+//@Component
 public class NewlecExam implements Exam {
+
+    //@Component로 객체 생성하기 때문에 값을 넣어주려면
+    @Value("90")
     private int kor;
+    @Value("100")
     private int eng;
     private int math;
     private int com;
