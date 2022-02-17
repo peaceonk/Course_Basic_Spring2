@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd
+">
+
+<!--    XML 파일에서 설정해야할 3가지
+1.
+Exam exam = new NewlecExam(1,1,1,1);
+이 객체를 생성하는 코드
+
+2. 프록시가 된
+ (Exam) Proxy.newProxyInstance(NewlecExam.class.getClassLoader(),
+                // Class의 배열형태로 Exam이라는 녀석을 넘겨줌
+                new Class[] {Exam.class},
+                // 인터페이스를 구현하는 클래스를 객체화하는 작업을 하려면 별도의 클래스파일을 만들어야하는데
+                // InvocationHandler라는 익명클래스를 작성해줌
+                new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        long start = System.currentTimeMillis();
+
+                        //실제 코어 업무를 할 녀석이 method로 오는데 여기에
+                        // invoke로 (실제 업무 객체 , 호출하는메소드를 가지고 있는 파라미터인 args) 를 넣어줌
+                        Object result = method.invoke(exam, args);
+
+                        long end = System.currentTimeMillis();
+
+                        String message = (end - start) + "ms 걸렸습니다.";
+                        System.out.println(message);
+
+                        return result;
+                    }
+                })
+이 것을 생성하는 코드
+
+3. 서브 업무(?)라고 할 수있는
+    long start = System.currentTimeMillis();
+    long end = System.currentTimeMillis();
+    String message = (end - start) + "ms 걸렸습니다.";
+    System.out.println(message);
+    return result;
+
+    이 부분에 해당하는 코드드
+-->
+
+<!--    1번에 해당하는 코드 -->
+    <bean id="target" class="spring.aop.entity.NewlecExam">
+        <constructor-arg name="kor" value="10"/>
+<!--  AfterThrowing 을 테스트하기 위해 Exception을 발생 시켜봄-->
+<!--        <constructor-arg name="kor" value="101"/>-->
+        <constructor-arg name="eng" value="20"/>
+        <constructor-arg name="math" value="30"/>
+        <constructor-arg name="com" value="40"/>
+    </bean>
+
+<!--    로그를 출력하기 위한 기능(서브업무)을 하는 직접 만들어줄 내용 -->
+    <bean id="logAroundAdvice" class="spring.aop.advice.LogAroundAdvice" />
+<!--    Before형태의 Advice를 주는 업무를 위한 클래스의 빈 생성 -->
+    <bean id="logBeforeAdvice" class="spring.aop.advice.LogBeforeAdvice" />
+<!--    AfterReturning / AfterThrowing Advice를 주는 업무를 위한 클래스의 빈 생성 -->
+    <bean id="logAfterReturningAdvice" class="spring.aop.advice.LogAfterReturningAdvice" />
+    <bean id="logAfterThrowingAdvice" class="spring.aop.advice.LogAfterThrowingAdvice" />
+
+                    <!--                NameMatchMethodPointcutAdvisor로 합치기 위해서 주석   -->
+   <!-- <bean id="classicPointCut" class="org.springframework.aop.support.NameMatchMethodPointcut">
+&lt;!&ndash;     total이 porint cut 되도록 설정   &ndash;&gt;
+        <property name="mappedName" value="total" />
+    </bean>
+
+&lt;!&ndash;   어떤 타켓의 메소드가  어떤 AOP(서브업무)를 weaving 할건지에 대한 설정 &ndash;&gt;
+    <bean id="classicBeforeAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+&lt;!&ndash; name 은 정해져 있음 bean으로 생성한 DefaultPointcutAdvisor클래스가 가지로 있는 setAdvicec 라는 세터를 가져오는 것 &ndash;&gt;
+&lt;!&ndash;        ref에 적용하고 싶은 AOP의 id를 가져오면 됨.&ndash;&gt;
+        <property name="advice" ref="logBeforeAdvice"/>
+&lt;!&ndash; 위와 마찬가지로 name은 정해져 있는 것임! ref는 pointCut 설정의 id를 가져옴&ndash;&gt;
+        <property name="pointcut" ref="classicPointCut"/>
+    </bean>-->
+
+<!--    <bean id="integrationBeforeAdvisor" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+        <property name="advice" ref="logBeforeAdvice" />
+&lt;!&ndash;        아래처럼 여러개의 함수에 적용하고 싶다면 리스트 형식으로 할 수도있음&ndash;&gt;
+&lt;!&ndash;        <property name="mappedNames" value="total">&ndash;&gt;
+        <property name="mappedNames" >
+            <list>
+                <value>total</value>
+                <value>avg</value>
+            </list>
+        </property>
+    </bean>-->
+
+<!-- 적용할 함수들을 여러개 작성하는데 더 간편하게 작성하기 위해 RegexpMethodPointcutAdvisor 활용 -->
+<!--  Regular Name Expression MethodPointcutAdvisor : 함수명을 레귤러 익스프레션의 정규식을 활용해서 쓸 수있음   -->
+    <bean id="RegexpBeforeAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <property name="advice" ref="logBeforeAdvice" />
+        <!--        아래처럼 여러개의 함수에 적용하고 싶다면 리스트 형식으로 할 수도있음-->
+        <!--        <property name="mappedNames" value="total">-->
+        <property name="patterns" >
+            <list>
+<!--        . : Any Character  / * : 몇개     즉 , 여기서는 method 이름에 to가 들어간 모든 메소드를 의미함  -->
+                <value>.*to.*</value>
+            </list>
+        </property>
+    </bean>
+
+
+
+    <bean id="proxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <!-- 프록시를 만들때는 2가지를 설정해줘야함. -->
+<!--        1. 타겟에 해당하는 NewlecExam의 객체에 getClassLoader를 넣어준것-->
+            <!-- name은 setTarget() 에서 set을 지우고 대문자를 소문자로 바꿔서 넣어준다고 생가하면 되고   -->
+            <!-- 그 뒤에 내용은 객체(target대상)가  value값이라면 value속성으로 참조면은 ref로 하면됨.
+                 여기 예제에서는 위에서 Bean을 생성한 NewlecExam이므로 그녀석의 id인 target을 가져오는 것임-->
+        <property name="target" ref="target" />
+
+<!--        2. 서브업무에 해당하는 핸들러 -->
+        <property name="interceptorNames">
+            <list>   <!--  참조 목록 -->
+                <value>logAroundAdvice</value>
+<!--                Porint Cut 을 적용 시키기 위해서 주석-->
+<!--                <value>logBeforeAdvice</value>-->
+                    <!--      NameMatchMethodPointcutAdvisor로 합치기 위해서 주석           -->
+<!--                <value>classicBeforeAdvisor</value>-->
+                                        <!--           RegexpMethodPointcutAdvisor활용해볼거임             -->
+<!--                <value>integrationBeforeAdvisor</value>-->
+                <value>RegexpBeforeAdvisor</value>
+                <value>logAfterReturningAdvice</value>
+                <value>logAfterThrowingAdvice</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>
